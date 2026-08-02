@@ -47,6 +47,7 @@
       .title-group {
         display: flex;
         flex-direction: column;
+        margin-bottom: 12px;
       }
 
       .title-group label {
@@ -60,6 +61,7 @@
       .content-group {
         display: flex;
         flex-direction: column;
+        margin-bottom: 12px;
       }
       .content-group label {
         font-weight: 600;
@@ -74,6 +76,29 @@
         font-size: 16px;
         color: #1f2937;
         border-radius: 7px;
+      }
+
+      .create-buttons {
+        margin-bottom: 12px;
+      }
+      .addBtn {
+        background-color: rgb(69, 69, 247);
+        color: whitesmoke;
+        border-radius: 5px;
+        padding: 7px 17px;
+        cursor: pointer;
+        transition: 0.3s ease;
+        font-size: 16px;
+        margin-right: 12px;
+      }
+      .create-buttons .clearBtn {
+        background-color: whitesmoke;
+        color: rgb(49, 49, 49);
+        border-radius: 5px;
+        padding: 6px 20px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.3s ease;
       }
     </style>
     <title>Blog</title>
@@ -98,20 +123,88 @@
 
           <div class="content-group">
             <label for="text">Post Content</label>
-            <textarea name="" id="contentText"></textarea>
+            <textarea
+              name=""
+              id="contentText"
+              placeholder="Write your post content here..."
+            ></textarea>
           </div>
 
           <div class="create-buttons">
             <button class="addBtn">+ Add Post</button>
-            <button class="clearBtn">Clear</button>
+            <button class="clearBtn">🔄 Clear</button>
           </div>
         </div>
 
         <div class="post-container">
-          <h2>Your Posts</h2>
+          <div>
+            <h2>Your Posts</h2>
+            <span class="showCount">0 posts</span>
+          </div>
+          <div class="blogsDisplay"></div>
         </div>
       </div>
     </main>
-    <script></script>
+    <script>
+      const titleInput = document.querySelector("#titleInput");
+      const contentText = document.querySelector("#contentText");
+      const addBtn = document.querySelector(".addBtn");
+      const clearBtn = document.querySelector(".clearBtn");
+      const showCount = document.querySelector(".showCount");
+      const blogsDisplay = document.querySelector(".blogsDisplay");
+
+      let blogs = [];
+
+      const newPost = {
+        title: titleInput.value,
+        date: new Date().toLocaleString(),
+        content: contentText.value,
+      };
+
+      // saveToLocal();
+      // displayPosts();
+
+      addBtn.addEventListener("click", () => {
+        const title = titleInput.value;
+        const content = contentText.value;
+        const currentDate = new Date().toLocaleString([], {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        const newBlog = document.createElement("div");
+        const blogTitle = document.createElement("h3");
+        blogTitle.textContent = title;
+        const blogDate = document.createElement("p");
+        blogDate.textContent = currentDate;
+        const blogP = document.createElement("p");
+        blogP.textContent = content;
+
+        newBlog.appendChild(blogTitle);
+        newBlog.appendChild(blogDate);
+        newBlog.appendChild(blogP);
+        blogsDisplay.appendChild(newBlog);
+        blogs.push(newPost);
+
+        titleInput.value = "";
+        contentText.value = "";
+      });
+
+      clearBtn.addEventListener("click", () => {
+        titleInput.value = "";
+        contentText.value = "";
+      });
+
+      function saveToLocal() {
+        localStorage.setItem("blogs", JSON.stringify(blogs));
+      }
+
+      function getFromLocal() {
+        localStorage.getItem("blogs", JSON.parse(blogs));
+      }
+    </script>
   </body>
 </html>
