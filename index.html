@@ -155,18 +155,9 @@
 
       let blogs = [];
 
-      const newPost = {
-        title: titleInput.value,
-        date: new Date().toLocaleString(),
-        content: contentText.value,
-      };
-
-      // saveToLocal();
-      // displayPosts();
-
       addBtn.addEventListener("click", () => {
-        const title = titleInput.value;
-        const content = contentText.value;
+        const title = titleInput.value.trim();
+        const content = contentText.value.trim();
         const currentDate = new Date().toLocaleString([], {
           year: "numeric",
           month: "numeric",
@@ -175,20 +166,20 @@
           minute: "2-digit",
         });
 
-        const newBlog = document.createElement("div");
-        const blogTitle = document.createElement("h3");
-        blogTitle.textContent = title;
-        const blogDate = document.createElement("p");
-        blogDate.textContent = currentDate;
-        const blogP = document.createElement("p");
-        blogP.textContent = content;
+        if (title === "" || content === "") {
+          alert("Please fill all the fields!");
+          return;
+        }
 
-        newBlog.appendChild(blogTitle);
-        newBlog.appendChild(blogDate);
-        newBlog.appendChild(blogP);
-        blogsDisplay.appendChild(newBlog);
+        const newPost = {
+          title: title,
+          currentDate: currentDate,
+          content: content,
+        };
         blogs.push(newPost);
 
+        saveToLocal();
+        displayPosts();
         titleInput.value = "";
         contentText.value = "";
       });
@@ -198,13 +189,39 @@
         contentText.value = "";
       });
 
+      function displayPosts() {
+        blogsDisplay.innerHTML = "";
+
+        blogs.forEach((post) => {
+          const newBlog = document.createElement("div");
+          const blogTitle = document.createElement("h3");
+          blogTitle.textContent = post.title;
+          const blogDate = document.createElement("p");
+          blogDate.textContent = post.currentDate;
+          const blogP = document.createElement("p");
+          blogP.textContent = post.content;
+
+          newBlog.appendChild(blogTitle);
+          newBlog.appendChild(blogDate);
+          newBlog.appendChild(blogP);
+          blogsDisplay.appendChild(newBlog);
+        });
+      }
+
       function saveToLocal() {
         localStorage.setItem("blogs", JSON.stringify(blogs));
       }
 
       function getFromLocal() {
-        localStorage.getItem("blogs", JSON.parse(blogs));
+        let savedBlogs = localStorage.getItem("blogs");
+        if (savedBlogs) {
+          return JSON.parse(savedBlogs);
+        }
+        return [];
       }
+
+      blogs = getFromLocal();
+      displayPosts();
     </script>
   </body>
 </html>
