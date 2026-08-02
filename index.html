@@ -192,18 +192,37 @@
       function displayPosts() {
         blogsDisplay.innerHTML = "";
 
-        blogs.forEach((post) => {
+        blogs.forEach((post, index) => {
           const newBlog = document.createElement("div");
+          newBlog.className = "newBlog";
           const blogTitle = document.createElement("h3");
           blogTitle.textContent = post.title;
           const blogDate = document.createElement("p");
           blogDate.textContent = post.currentDate;
           const blogP = document.createElement("p");
           blogP.textContent = post.content;
+          const buttonsDiv = document.createElement("div");
+          buttonsDiv.className = "buttonsDiv";
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.className = "editBtn";
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.className = "deleteBtn";
 
+          deleteBtn.addEventListener("click", () => {
+            blogs.splice(index, 1);
+            saveToLocal();
+            displayPosts();
+          });
+
+          buttonsDiv.appendChild(editBtn);
+          buttonsDiv.appendChild(deleteBtn);
           newBlog.appendChild(blogTitle);
           newBlog.appendChild(blogDate);
           newBlog.appendChild(blogP);
+          newBlog.appendChild(buttonsDiv);
+
           blogsDisplay.appendChild(newBlog);
         });
       }
