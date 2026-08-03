@@ -210,6 +210,36 @@
           deleteBtn.textContent = "Delete";
           deleteBtn.className = "deleteBtn";
 
+          let isEditing = false;
+          editBtn.addEventListener("click", () => {
+            if (!isEditing) {
+              isEditing = true;
+              editBtn.textContent = "Save";
+              editBtn.classList.add("saveBtn");
+
+              blogTitle.innerHTML = `<input type = "text" id="editTitle-${index}" value="${post.title}">`;
+              blogP.innerHTML = `<textarea id="editContent-${index}"> ${post.content}</textarea>`;
+            } else {
+              const updatedTitle = document
+                .getElementById(`editTitle-${index}`)
+                .value.trim();
+              const updatedContent = document
+                .getElementById(`editContent-${index}`)
+                .value.trim();
+
+              if (updatedTitle === "" || updatedContent === "") {
+                alert("Fields cannot be empty!");
+                return;
+              }
+
+              blogs[index].title = updatedTitle;
+              blogs[index].content = updatedContent;
+
+              saveToLocal();
+              displayPosts();
+            }
+          });
+
           deleteBtn.addEventListener("click", () => {
             blogs.splice(index, 1);
             saveToLocal();
