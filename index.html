@@ -190,6 +190,7 @@
       });
 
       function displayPosts() {
+        showCount.textContent = `${blogs.length} ${blogs.length === 1 ? "post" : "posts"}`;
         blogsDisplay.innerHTML = "";
 
         blogs.forEach((post, index) => {
