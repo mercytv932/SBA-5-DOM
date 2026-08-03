@@ -23,7 +23,7 @@
         background: #e7d2f8;
         width: 100%;
         max-width: 800px;
-        padding: auto;
+        padding: 0;
         display: flex;
         flex-direction: column;
         border-radius: 12px;
@@ -76,7 +76,7 @@
       }
       .content-group textarea {
         width: 100%;
-        width: 700px;
+        min-width: 700px;
         min-height: 100px;
         padding: 12px 16px;
         box-sizing: border-box;
@@ -120,7 +120,7 @@
         display: flex;
         background-color: #2b8749;
         justify-content: space-between;
-        align-self: center;
+        align-items: center;
         margin-bottom: 18px;
       }
 
@@ -162,6 +162,66 @@
         margin: 8px 0;
         color: #475569;
         line-height: 1.6;
+      }
+
+      .newBlog p:nth-of-type(1) {
+        color: #94a3b8;
+        font-size: 0.85rem;
+      }
+
+      .buttonsDiv {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .editBtn,
+      .deleteBtn {
+        padding: 7px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .editBtn {
+        background-color: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #93cf5d;
+      }
+
+      .deleteBtn {
+        background-color: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fca5a5;
+      }
+
+      .editBtn:hover {
+        background-color: #deeafe;
+      }
+
+      .deleteBtn:hover {
+        background-color: #fee2e2;
+      }
+
+      .saveBtn {
+        background-color: #dcdce7;
+        color: #15803d;
+        border: 1px solid #86efac;
+      }
+
+      .newBlog input,
+      .newBlog textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font: inherit;
+      }
+
+      .newBlog textarea {
+        min-height: 90px;
+        resize: vertical;
       }
     </style>
     <title>Blog</title>
@@ -208,133 +268,6 @@
         </div>
       </div>
     </main>
-    <script>
-      const titleInput = document.querySelector("#titleInput");
-      const contentText = document.querySelector("#contentText");
-      const addBtn = document.querySelector(".addBtn");
-      const clearBtn = document.querySelector(".clearBtn");
-      const showCount = document.querySelector(".showCount");
-      const blogsDisplay = document.querySelector(".blogsDisplay");
-
-      let blogs = [];
-
-      addBtn.addEventListener("click", () => {
-        const title = titleInput.value.trim();
-        const content = contentText.value.trim();
-        const currentDate = new Date().toLocaleString([], {
-          year: "numeric",
-          month: "numeric",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-
-        if (title === "" || content === "") {
-          alert("Please fill all the fields!");
-          return;
-        }
-
-        const newPost = {
-          title: title,
-          currentDate: currentDate,
-          content: content,
-        };
-        blogs.push(newPost);
-
-        saveToLocal();
-        displayPosts();
-        titleInput.value = "";
-        contentText.value = "";
-      });
-
-      clearBtn.addEventListener("click", () => {
-        titleInput.value = "";
-        contentText.value = "";
-      });
-
-      function displayPosts() {
-        showCount.textContent = `${blogs.length} ${blogs.length === 1 ? "post" : "posts"}`;
-        blogsDisplay.innerHTML = "";
-
-        blogs.forEach((post, index) => {
-          const newBlog = document.createElement("div");
-          newBlog.className = "newBlog";
-          const blogTitle = document.createElement("h3");
-          blogTitle.textContent = post.title;
-          const blogDate = document.createElement("p");
-          blogDate.textContent = post.currentDate;
-          const blogP = document.createElement("p");
-          blogP.textContent = post.content;
-          const buttonsDiv = document.createElement("div");
-          buttonsDiv.className = "buttonsDiv";
-          const editBtn = document.createElement("button");
-          editBtn.textContent = "Edit";
-          editBtn.className = "editBtn";
-          const deleteBtn = document.createElement("button");
-          deleteBtn.textContent = "Delete";
-          deleteBtn.className = "deleteBtn";
-
-          let isEditing = false;
-          editBtn.addEventListener("click", () => {
-            if (!isEditing) {
-              isEditing = true;
-              editBtn.textContent = "Save";
-              editBtn.classList.add("saveBtn");
-
-              blogTitle.innerHTML = `<input type = "text" id="editTitle-${index}" value="${post.title}">`;
-              blogP.innerHTML = `<textarea id="editContent-${index}"> ${post.content}</textarea>`;
-            } else {
-              const updatedTitle = document
-                .getElementById(`editTitle-${index}`)
-                .value.trim();
-              const updatedContent = document
-                .getElementById(`editContent-${index}`)
-                .value.trim();
-
-              if (updatedTitle === "" || updatedContent === "") {
-                alert("Fields cannot be empty!");
-                return;
-              }
-
-              blogs[index].title = updatedTitle;
-              blogs[index].content = updatedContent;
-
-              saveToLocal();
-              displayPosts();
-            }
-          });
-
-          deleteBtn.addEventListener("click", () => {
-            blogs.splice(index, 1);
-            saveToLocal();
-            displayPosts();
-          });
-
-          buttonsDiv.appendChild(editBtn);
-          buttonsDiv.appendChild(deleteBtn);
-          newBlog.appendChild(blogTitle);
-          newBlog.appendChild(blogDate);
-          newBlog.appendChild(blogP);
-          newBlog.appendChild(buttonsDiv);
-
-          blogsDisplay.appendChild(newBlog);
-        });
-      }
-
-      function saveToLocal() {
-        localStorage.setItem("blogs", JSON.stringify(blogs));
-      }
-
-      function getFromLocal() {
-        let savedBlogs = localStorage.getItem("blogs");
-        if (savedBlogs) {
-          return JSON.parse(savedBlogs);
-        }
-        return [];
-      }
-
-      blogs = getFromLocal();
-      displayPosts();
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
